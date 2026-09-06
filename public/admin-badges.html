@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<title>칭호 뱃지 관리</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;900&display=swap">
+<style>
+  :root{
+    --paper:#F4F8FB; --paper-alt:#E4EEF5; --ink:#161B42; --ink-soft:#5B6B8C;
+    --accent:#2374A6; --accent-2:#3FB6D3; --accent-soft:#D7ECF3; --line:#CBDCE6;
+    --card-bg:#FFFFFF; --shadow: 0 1px 2px rgba(22,27,66,0.07), 0 4px 14px rgba(22,27,66,0.08);
+    --off:#EEF2F6; --warn:#9C7A17; --warn-soft:#F0E4BE; --bad:#B24D46;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#0E1524; --paper-alt:#172137; --ink:#E7ECF7; --ink-soft:#93A2C2;
+      --accent:#5BC6E8; --accent-2:#2E8FBE; --accent-soft:#173547; --line:#2B3852;
+      --card-bg:#141D31; --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 6px 18px rgba(0,0,0,0.35);
+      --off:#1B2436; --warn:#E3C55C; --warn-soft:#3B341A; --bad:#E1897C;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#0E1524; --paper-alt:#172137; --ink:#E7ECF7; --ink-soft:#93A2C2;
+    --accent:#5BC6E8; --accent-2:#2E8FBE; --accent-soft:#173547; --line:#2B3852;
+    --card-bg:#141D31; --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 6px 18px rgba(0,0,0,0.35);
+    --off:#1B2436; --warn:#E3C55C; --warn-soft:#3B341A; --bad:#E1897C;
+  }
+  *{box-sizing:border-box;}
+  body{background:var(--paper);color:var(--ink);font-family:"Noto Sans KR",sans-serif;-webkit-font-smoothing:antialiased;margin:0;}
+  .wrap{max-width:980px;margin:0 auto;padding:48px 24px 120px;}
+  .kicker{display:flex;align-items:center;gap:10px;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:16px;}
+  .kicker .dot{width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,var(--accent-2),var(--accent));flex:none;}
+  .brand-bar{height:4px;border-radius:999px;background:linear-gradient(90deg,var(--accent-2),var(--accent));margin-bottom:26px;}
+  h1{font-size:26px;font-weight:900;margin:0 0 8px;letter-spacing:-.01em;}
+  .lede{color:var(--ink-soft);font-size:14.5px;line-height:1.6;margin:0 0 24px;max-width:680px;}
+  .status-pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;margin-bottom:24px;background:var(--off);color:var(--ink-soft);}
+  .status-pill.ok{background:#DFF3E4;color:#1F7A3B;}
+  .status-pill.err{background:#F6E3DE;color:#A34A2E;}
+
+  section.badge-legend{margin-bottom:32px;}
+  .legend-head{font-size:15px;font-weight:700;margin-bottom:12px;}
+  .legend-grid{display:flex;flex-wrap:wrap;gap:12px;}
+  .legend-card{background:var(--card-bg);border:1px solid var(--line);border-radius:12px;padding:8px;box-shadow:var(--shadow);text-align:center;width:150px;}
+  .legend-card img{width:100%;height:auto;border-radius:6px;display:block;margin-bottom:4px;}
+  .legend-card .lbl{font-size:12px;font-weight:600;color:var(--ink-soft);}
+
+  .class-group{margin-bottom:30px;}
+  .class-head{display:flex;align-items:baseline;gap:10px;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--line);}
+  .class-head h2{font-size:17px;font-weight:700;margin:0;}
+  .class-head .count{font-size:12.5px;color:var(--ink-soft);}
+  .roster-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(260px,1fr));gap:10px;}
+  .student-card{background:var(--card-bg);border:1px solid var(--line);border-radius:12px;padding:12px 14px;box-shadow:var(--shadow);}
+  .student-card.dirty{border-color:var(--warn);}
+  .student-card .name{font-weight:700;font-size:15px;margin-bottom:8px;}
+  .chip-row{display:flex;flex-wrap:wrap;gap:6px;}
+  .chip{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:999px;border:1px solid var(--line);background:var(--off);color:var(--ink-soft);font-size:12px;font-weight:600;cursor:pointer;transition:all .12s ease;}
+  .chip:hover{border-color:var(--accent);}
+  .chip.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+  .chip .thumb{width:16px;height:auto;border-radius:2px;flex:none;}
+
+  .apply-bar{
+    position:fixed; left:0; right:0; bottom:0;
+    background:var(--card-bg); border-top:1px solid var(--line);
+    box-shadow:0 -4px 16px rgba(0,0,0,0.08);
+    padding:14px 24px; display:flex; align-items:center; justify-content:center; gap:16px;
+    z-index:10;
+  }
+  .apply-bar .msg{font-size:13px;color:var(--ink-soft);}
+  .apply-bar .msg.dirty{color:var(--warn);font-weight:700;}
+  .apply-btn{
+    padding:11px 26px; border-radius:10px; border:none;
+    background:linear-gradient(135deg,var(--accent-2),var(--accent)); color:#fff;
+    font-family:inherit; font-size:14px; font-weight:700; cursor:pointer;
+  }
+  .apply-btn:disabled{opacity:0.4;cursor:not-allowed;}
+
+  .gate{max-width:360px;margin:120px auto 0;padding:32px 28px;background:var(--card-bg);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);text-align:center;}
+  .gate h2{font-size:17px;margin:0 0 6px;}
+  .gate p{font-size:13px;color:var(--ink-soft);margin:0 0 18px;}
+  .gate input{width:100%;padding:11px 14px;border-radius:10px;border:1px solid var(--line);background:var(--paper);color:var(--ink);font-family:inherit;font-size:15px;text-align:center;letter-spacing:0.2em;outline:none;margin-bottom:10px;}
+  .gate input:focus{border-color:var(--accent);}
+  .gate button{width:100%;padding:11px 14px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--accent-2),var(--accent));color:#fff;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;}
+  .gate .err{color:var(--bad);font-size:12.5px;margin-top:10px;min-height:16px;}
+</style>
+
+<div class="gate" id="gate">
+  <h2>교사용 페이지</h2>
+  <p>비밀번호를 입력해주세요.</p>
+  <input type="password" id="gate-pw" inputmode="numeric" maxlength="4" placeholder="••••" autofocus>
+  <button type="button" onclick="checkGatePw()">확인</button>
+  <div class="err" id="gate-err"></div>
+</div>
+
+<div class="wrap" id="wrap" hidden>
+  <div class="kicker"><span class="dot"></span>TIS 인터내셔널스쿨 · 교사용</div>
+  <div class="brand-bar"></div>
+  <h1>칭호 뱃지 관리</h1>
+  <p class="lede">뱃지를 클릭해 배정/해제를 표시한 뒤, 아래 "변경사항 적용" 버튼을 눌러야 실제 학생 페이지에 반영됩니다.</p>
+  <div class="status-pill" id="loadStatus">불러오는 중…</div>
+
+  <section class="badge-legend">
+    <div class="legend-head">뱃지 종류</div>
+    <div class="legend-grid" id="legendGrid"></div>
+  </section>
+
+  <div id="rosterRoot"></div>
+</div>
+
+<div class="apply-bar" id="applyBar" hidden>
+  <span class="msg" id="applyMsg">변경사항 없음</span>
+  <button type="button" class="apply-btn" id="applyBtn" onclick="applyChanges()" disabled>변경사항 적용</button>
+</div>
+
+<script>
+var BADGE_TYPES = [{"id": "hanamaru", "label": "하나마루"}, {"id": "redvelvet", "label": "레드벨벳"}, {"id": "hwaksi", "label": "MR. HWAK"}, {"id": "gisungjeoneopmu", "label": "기승전없무"}, {"id": "chusacheseyo", "label": "추사체세요"}, {"id": "nahollojibe", "label": "나홀로집에"}, {"id": "geungeoeopseulmu", "label": "근거없을무"}];
+var STUDENTS = [["4반", [["김연호", "608786732310"], ["김지아", "657980896301"], ["안다은", "658362138843"], ["윤은준", "210236802522"], ["김하은", "480879670093"], ["이윤아", "709574527613"], ["임승민", "007718462108"], ["이준원", "712611170385"], ["윤준휘", "749686452709"], ["김우찬", "108716093647"], ["윤주원", "955343677368"]]], ["3반", [["박나연", "473795523887"], ["은성준", "541057517797"], ["신석현", "782502937015"], ["홍준서", "415536389911"], ["전미경", "134176315965"], ["이예지", "797021979497"], ["김성은", "506953236979"], ["현은지", "895580638021"]]], ["B반", [["하성문", "721434798847"], ["문서진", "036800871806"], ["이규민", "513132156510"], ["최재혁", "423655667143"], ["문예원", "682100449842"], ["하지원", "798718219988"], ["정한", "113527289008"], ["정서윤", "727210409447"], ["김민성", "264420186367"], ["곽진우", "540966184961"], ["김지호", "570807363400"], ["이서현", "818092827689"], ["배세진", "387092852982"], ["김건", "140521921710"], ["이루리", "009240331789"], ["신재민", "955391169119"], ["황현수", "647295535692"]]]];
+var ADMIN_KEY = 'X7kTEWd7ItpOtVMm4I0f5H1LIJvzSqpa';
+var GATE_PW = '0000';
+
+var saved = {};   // code -> [badgeId,...]  (last known server state)
+var pending = {};  // code -> [badgeId,...]  (working copy being edited)
+var dirty = false;
+
+function badgePath(id){ return '/badge-assets/' + id + '.png'; }
+
+function renderLegend(){
+  var root = document.getElementById('legendGrid');
+  root.innerHTML = '';
+  BADGE_TYPES.forEach(function(b){
+    var card = document.createElement('div');
+    card.className = 'legend-card';
+    card.innerHTML = '<img src="' + badgePath(b.id) + '" alt="' + b.label + '"><div class="lbl">' + b.label + '</div>';
+    root.appendChild(card);
+  });
+}
+
+function currentBadges(code){ return pending[code] || []; }
+
+function isDirty(code){
+  var a = (saved[code] || []).slice().sort().join(',');
+  var b = (pending[code] || []).slice().sort().join(',');
+  return a !== b;
+}
+
+function toggleBadge(code, badgeId){
+  var list = currentBadges(code).slice();
+  var idx = list.indexOf(badgeId);
+  if(idx === -1) list.push(badgeId); else list.splice(idx,1);
+  pending[code] = list;
+  renderRoster();
+  updateApplyBar();
+}
+
+function updateApplyBar(){
+  var count = 0;
+  Object.keys(pending).forEach(function(code){ if(isDirty(code)) count++; });
+  var bar = document.getElementById('applyBar');
+  var msg = document.getElementById('applyMsg');
+  var btn = document.getElementById('applyBtn');
+  bar.hidden = false;
+  if(count > 0){
+    msg.textContent = '저장되지 않은 변경사항 ' + count + '건';
+    msg.className = 'msg dirty';
+    btn.disabled = false;
+  } else {
+    msg.textContent = '변경사항 없음';
+    msg.className = 'msg';
+    btn.disabled = true;
+  }
+}
+
+function renderRoster(){
+  var root = document.getElementById('rosterRoot');
+  root.innerHTML = '';
+  STUDENTS.forEach(function(group){
+    var cls = group[0], students = group[1];
+    var sec = document.createElement('div');
+    sec.className = 'class-group';
+    var head = document.createElement('div');
+    head.className = 'class-head';
+    head.innerHTML = '<h2>' + cls + '</h2><span class="count">' + students.length + '명</span>';
+    sec.appendChild(head);
+    var grid = document.createElement('div');
+    grid.className = 'roster-grid';
+    students.forEach(function(s){
+      var name = s[0], code = s[1];
+      var card = document.createElement('div');
+      card.className = 'student-card' + (isDirty(code) ? ' dirty' : '');
+      var active = currentBadges(code);
+      var chipsHtml = BADGE_TYPES.map(function(b){
+        var isActive = active.indexOf(b.id) !== -1;
+        return '<span class="chip' + (isActive ? ' active' : '') + '" data-code="' + code + '" data-badge="' + b.id + '">' +
+          '<img class="thumb" src="' + badgePath(b.id) + '" alt="">' + b.label + '</span>';
+      }).join('');
+      card.innerHTML = '<div class="name">' + name + '</div><div class="chip-row">' + chipsHtml + '</div>';
+      grid.appendChild(card);
+    });
+    sec.appendChild(grid);
+    root.appendChild(sec);
+  });
+  root.querySelectorAll('.chip').forEach(function(el){
+    el.addEventListener('click', function(){
+      toggleBadge(el.getAttribute('data-code'), el.getAttribute('data-badge'));
+    });
+  });
+}
+
+function applyChanges(){
+  var btn = document.getElementById('applyBtn');
+  var msg = document.getElementById('applyMsg');
+  btn.disabled = true;
+  msg.textContent = '적용 중…';
+  msg.className = 'msg dirty';
+  var payload = {};
+  Object.keys(pending).forEach(function(code){
+    if(pending[code] && pending[code].length) payload[code] = pending[code];
+  });
+  fetch('/api/badges', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-Admin-Key': ADMIN_KEY },
+    body: JSON.stringify(payload)
+  }).then(function(r){
+    if(!r.ok) throw new Error('http ' + r.status);
+    saved = JSON.parse(JSON.stringify(pending));
+    renderRoster();
+    updateApplyBar();
+    msg.textContent = '적용 완료';
+    msg.className = 'msg';
+  }).catch(function(e){
+    console.error('apply failed', e);
+    msg.textContent = '적용 실패 - 다시 시도해주세요';
+    msg.className = 'msg dirty';
+    btn.disabled = false;
+  });
+}
+
+function loadState(){
+  var pill = document.getElementById('loadStatus');
+  fetch('/api/badges').then(function(r){ return r.json(); }).then(function(data){
+    saved = data || {};
+    pending = JSON.parse(JSON.stringify(saved));
+    renderRoster();
+    updateApplyBar();
+    pill.className = 'status-pill ok';
+    pill.textContent = '불러오기 완료';
+  }).catch(function(e){
+    console.error('load failed', e);
+    pill.className = 'status-pill err';
+    pill.textContent = '불러오기 실패 - 새로고침 해주세요';
+  });
+}
+
+function unlockGate(){
+  document.getElementById('gate').hidden = true;
+  document.getElementById('wrap').hidden = false;
+  renderLegend();
+  loadState();
+}
+function checkGatePw(){
+  var val = document.getElementById('gate-pw').value;
+  if(val === GATE_PW){
+    try{ sessionStorage.setItem('tis_admin_gate', '1'); }catch(e){}
+    unlockGate();
+  } else {
+    document.getElementById('gate-err').textContent = '비밀번호가 올바르지 않습니다.';
+    document.getElementById('gate-pw').value = '';
+    document.getElementById('gate-pw').focus();
+  }
+}
+document.getElementById('gate-pw').addEventListener('keydown', function(e){
+  if(e.key === 'Enter') checkGatePw();
+});
+(function(){
+  var already = false;
+  try{ already = sessionStorage.getItem('tis_admin_gate') === '1'; }catch(e){}
+  if(already) unlockGate();
+})();
+</script>

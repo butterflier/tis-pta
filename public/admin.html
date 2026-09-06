@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<title>소논문 리포트 대시보드</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap">
+<style>
+  :root{
+    --paper:#F4F8FB;
+    --paper-alt:#E4EEF5;
+    --ink:#161B42;
+    --ink-soft:#5B6B8C;
+    --accent:#2374A6;
+    --accent-2:#3FB6D3;
+    --accent-soft:#D7ECF3;
+    --line:#CBDCE6;
+    --card-bg:#FFFFFF;
+    --shadow: 0 1px 2px rgba(22,27,66,0.07), 0 4px 14px rgba(22,27,66,0.08);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#0E1524;
+      --paper-alt:#172137;
+      --ink:#E7ECF7;
+      --ink-soft:#93A2C2;
+      --accent:#5BC6E8;
+      --accent-2:#2E8FBE;
+      --accent-soft:#173547;
+      --line:#2B3852;
+      --card-bg:#141D31;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 6px 18px rgba(0,0,0,0.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#0E1524;
+    --paper-alt:#172137;
+    --ink:#E7ECF7;
+    --ink-soft:#93A2C2;
+    --accent:#5BC6E8;
+    --accent-2:#2E8FBE;
+    --accent-soft:#173547;
+    --line:#2B3852;
+    --card-bg:#141D31;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 6px 18px rgba(0,0,0,0.35);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Noto Sans KR",sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{
+    max-width:920px;
+    margin:0 auto;
+    padding:48px 24px 80px;
+  }
+  .kicker{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:13px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:16px;
+  }
+  .kicker .dot{width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,var(--accent-2),var(--accent));flex:none;}
+  .brand-bar{
+    height:4px;
+    border-radius:999px;
+    background:linear-gradient(90deg,var(--accent-2),var(--accent));
+    margin-bottom:26px;
+  }
+  h1{
+    font-size:26px;
+    font-weight:900;
+    margin:0 0 8px;
+    letter-spacing:-.01em;
+  }
+  .lede{
+    color:var(--ink-soft);
+    font-size:14.5px;
+    line-height:1.6;
+    margin:0 0 8px;
+    max-width:640px;
+  }
+  .note{
+    color:var(--ink-soft);
+    font-size:12.5px;
+    line-height:1.6;
+    margin:0 0 36px;
+    padding:10px 14px;
+    background:var(--accent-soft);
+    border-radius:10px;
+    display:inline-block;
+  }
+  .search-bar{
+    margin-bottom:32px;
+  }
+  .search-bar input{
+    width:100%;
+    padding:12px 16px;
+    border-radius:12px;
+    border:1px solid var(--line);
+    background:var(--card-bg);
+    color:var(--ink);
+    font-family:inherit;
+    font-size:14px;
+    outline:none;
+  }
+  .search-bar input:focus{border-color:var(--accent);}
+  section.class-group{margin-bottom:38px;}
+  .class-head{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    margin-bottom:14px;
+    padding-bottom:8px;
+    border-bottom:1px solid var(--line);
+  }
+  .class-head h2{
+    font-size:17px;
+    font-weight:700;
+    margin:0;
+  }
+  .class-head .count{
+    font-size:12.5px;
+    color:var(--ink-soft);
+  }
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(200px,1fr));
+    gap:10px;
+  }
+  .student-card{
+    padding:14px 16px;
+    background:var(--card-bg);
+    border:1px solid var(--line);
+    border-radius:12px;
+    box-shadow:var(--shadow);
+    transition:transform .12s ease, border-color .12s ease;
+  }
+  .student-card:hover{
+    transform:translateY(-2px);
+    border-color:var(--accent);
+  }
+  .student-card .card-link{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+    text-decoration:none;
+    color:var(--ink);
+  }
+  .student-card .name{
+    font-weight:700;
+    font-size:15px;
+  }
+  .student-card .arrow{
+    color:var(--accent);
+    font-size:16px;
+    flex:none;
+  }
+  .code-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:6px;
+    margin-top:8px;
+    padding-top:8px;
+    border-top:1px solid var(--line);
+  }
+  .code-text{
+    font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size:12.5px;
+    letter-spacing:0.03em;
+    color:var(--ink-soft);
+  }
+  .copy-btn{
+    font-family:inherit;
+    font-size:11px;
+    font-weight:700;
+    padding:3px 9px;
+    border-radius:999px;
+    border:1px solid var(--line);
+    background:var(--paper);
+    color:var(--ink-soft);
+    cursor:pointer;
+    flex:none;
+    transition:background .12s ease, color .12s ease, border-color .12s ease;
+  }
+  .copy-btn:hover{border-color:var(--accent);color:var(--accent);}
+  .copy-btn.copied{background:var(--accent);border-color:var(--accent);color:#fff;}
+  footer{
+    margin-top:48px;
+    padding-top:20px;
+    border-top:1px solid var(--line);
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:8px;
+    font-size:12px;
+    color:var(--ink-soft);
+  }
+  @media (max-width:480px){
+    .grid{grid-template-columns:repeat(auto-fill, minmax(150px,1fr));}
+    h1{font-size:22px;}
+  }
+  .gate{
+    max-width:360px;
+    margin:120px auto 0;
+    padding:32px 28px;
+    background:var(--card-bg);
+    border:1px solid var(--line);
+    border-radius:14px;
+    box-shadow:var(--shadow);
+    text-align:center;
+  }
+  .gate h2{font-size:17px;margin:0 0 6px;}
+  .gate p{font-size:13px;color:var(--ink-soft);margin:0 0 18px;}
+  .gate input{
+    width:100%;
+    padding:11px 14px;
+    border-radius:10px;
+    border:1px solid var(--line);
+    background:var(--paper);
+    color:var(--ink);
+    font-family:inherit;
+    font-size:15px;
+    text-align:center;
+    letter-spacing:0.2em;
+    outline:none;
+    margin-bottom:10px;
+  }
+  .gate input:focus{border-color:var(--accent);}
+  .gate button{
+    width:100%;
+    padding:11px 14px;
+    border-radius:10px;
+    border:none;
+    background:linear-gradient(135deg,var(--accent-2),var(--accent));
+    color:#fff;
+    font-family:inherit;
+    font-size:14px;
+    font-weight:700;
+    cursor:pointer;
+  }
+  .gate .err{color:#B24D46;font-size:12.5px;margin-top:10px;min-height:16px;}
+</style>
+
+<div class="gate" id="gate">
+  <h2>교사용 페이지</h2>
+  <p>비밀번호를 입력해주세요.</p>
+  <input type="password" id="gate-pw" inputmode="numeric" maxlength="4" placeholder="••••" autofocus>
+  <button type="button" onclick="checkGatePw()">확인</button>
+  <div class="err" id="gate-err"></div>
+</div>
+
+<div class="wrap" id="wrap" hidden>
+  <div class="kicker"><span class="dot"></span>TIS 인터내셔널스쿨 · 교사용</div>
+  <div class="brand-bar"></div>
+  <h1>소논문 리포트 대시보드</h1>
+  <p class="lede">반별로 정렬된 학생 명단입니다. 이름을 클릭하면 해당 학생의 개별 리포트(부모님 공유용)로 이동합니다.</p>
+  <p class="note">각 학생 리포트는 매일 00:30 전후로 최신 데이터로 갱신됩니다. 이 목록의 링크 자체는 학생별 리포트 주소가 그대로 유지되므로 별도 갱신이 필요 없습니다 — 새 학생이 등록되거나 반이 바뀔 때만 이 페이지를 업데이트합니다.</p>
+
+  <div class="search-bar">
+    <input type="text" id="search" placeholder="학생 이름 검색..." oninput="filterStudents()">
+  </div>
+
+  <div id="groups"></div>
+
+  <footer>
+    <span>업데이트: 2026년 9월 5일</span>
+    <span>TIS 인터내셔널스쿨 · 소논문 리포트</span>
+  </footer>
+</div>
+
+<script>
+var DATA = {
+  "4반": [
+    ["김연호", "608786732310.html"],
+    ["김지아", "657980896301.html"],
+    ["안다은", "658362138843.html"],
+    ["윤은준", "210236802522.html"],
+    ["김하은", "480879670093.html"],
+    ["이윤아", "709574527613.html"],
+    ["임승민", "007718462108.html"],
+    ["이준원", "712611170385.html"],
+    ["윤준휘", "749686452709.html"],
+    ["김우찬", "108716093647.html"],
+    ["윤주원", "955343677368.html"]
+  ],
+  "3반": [
+    ["박나연", "473795523887.html"],
+    ["은성준", "541057517797.html"],
+    ["신석현", "782502937015.html"],
+    ["홍준서", "415536389911.html"],
+    ["전미경", "134176315965.html"],
+    ["이예지", "797021979497.html"],
+    ["김성은", "506953236979.html"],
+    ["현은지", "895580638021.html"]
+  ],
+  "B반": [
+    ["하성문", "721434798847.html"],
+    ["문서진", "036800871806.html"],
+    ["이규민", "513132156510.html"],
+    ["최재혁", "423655667143.html"],
+    ["문예원", "682100449842.html"],
+    ["하지원", "798718219988.html"],
+    ["정한", "113527289008.html"],
+    ["정서윤", "727210409447.html"],
+    ["김민성", "264420186367.html"],
+    ["곽진우", "540966184961.html"],
+    ["김지호", "570807363400.html"],
+    ["이서현", "818092827689.html"],
+    ["배세진", "387092852982.html"],
+    ["김건", "140521921710.html"],
+    ["이루리", "009240331789.html"],
+    ["신재민", "955391169119.html"],
+    ["황현수", "647295535692.html"]
+  ]
+};
+
+function render(filter){
+  var root = document.getElementById('groups');
+  root.innerHTML = '';
+  var q = (filter || '').trim();
+  Object.keys(DATA).forEach(function(cls){
+    var students = DATA[cls].filter(function(s){ return !q || s[0].indexOf(q) !== -1; });
+    if(!students.length) return;
+    var sec = document.createElement('section');
+    sec.className = 'class-group';
+    var head = document.createElement('div');
+    head.className = 'class-head';
+    head.innerHTML = '<h2>' + cls + '</h2><span class="count">' + students.length + '명</span>';
+    sec.appendChild(head);
+    var grid = document.createElement('div');
+    grid.className = 'grid';
+    students.forEach(function(s){
+      var code = s[1].replace(/\.html$/, '');
+      var card = document.createElement('div');
+      card.className = 'student-card';
+      card.innerHTML =
+        '<a class="card-link" href="' + s[1] + '" target="_blank" rel="noopener">' +
+          '<span class="name">' + s[0] + '</span><span class="arrow">→</span>' +
+        '</a>' +
+        '<div class="code-row">' +
+          '<span class="code-text">' + code + '</span>' +
+          '<button type="button" class="copy-btn" data-code="' + code + '">복사</button>' +
+        '</div>';
+      grid.appendChild(card);
+    });
+    sec.appendChild(grid);
+    root.appendChild(sec);
+  });
+  if(!root.children.length){
+    root.innerHTML = '<p style="color:var(--ink-soft);text-align:center;padding:40px 0;">검색 결과가 없습니다.</p>';
+  }
+  root.querySelectorAll('.copy-btn').forEach(function(btn){
+    btn.addEventListener('click', function(e){
+      e.preventDefault();
+      var code = btn.getAttribute('data-code');
+      var done = function(){
+        btn.textContent = '복사됨';
+        btn.classList.add('copied');
+        setTimeout(function(){
+          btn.textContent = '복사';
+          btn.classList.remove('copied');
+        }, 1500);
+      };
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(code).then(done).catch(function(){
+          fallbackCopy(code, done);
+        });
+      } else {
+        fallbackCopy(code, done);
+      }
+    });
+  });
+}
+
+function fallbackCopy(text, done){
+  var ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.focus();
+  ta.select();
+  try{ document.execCommand('copy'); done(); }catch(e){}
+  document.body.removeChild(ta);
+}
+
+function filterStudents(){
+  render(document.getElementById('search').value);
+}
+
+render();
+
+var GATE_PW = '0000';
+function unlockGate(){
+  document.getElementById('gate').hidden = true;
+  document.getElementById('wrap').hidden = false;
+}
+function checkGatePw(){
+  var val = document.getElementById('gate-pw').value;
+  if(val === GATE_PW){
+    try{ sessionStorage.setItem('tis_admin_gate', '1'); }catch(e){}
+    unlockGate();
+  } else {
+    document.getElementById('gate-err').textContent = '비밀번호가 올바르지 않습니다.';
+    document.getElementById('gate-pw').value = '';
+    document.getElementById('gate-pw').focus();
+  }
+}
+document.getElementById('gate-pw').addEventListener('keydown', function(e){
+  if(e.key === 'Enter') checkGatePw();
+});
+(function(){
+  var already = false;
+  try{ already = sessionStorage.getItem('tis_admin_gate') === '1'; }catch(e){}
+  if(already) unlockGate();
+})();
+</script>

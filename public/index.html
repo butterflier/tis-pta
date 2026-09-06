@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<title>TIS 소논문 리포트</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap">
+<style>
+  :root{
+    --paper:#F4F8FB; --paper-alt:#E4EEF5; --ink:#161B42; --ink-soft:#5B6B8C;
+    --accent:#2374A6; --accent-2:#3FB6D3; --accent-soft:#D7ECF3; --line:#CBDCE6;
+    --card-bg:#FFFFFF; --shadow: 0 1px 2px rgba(22,27,66,0.07), 0 4px 14px rgba(22,27,66,0.08);
+    --status-bad:#B24D46;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#0E1524; --paper-alt:#172137; --ink:#E7ECF7; --ink-soft:#93A2C2;
+      --accent:#5BC6E8; --accent-2:#2E8FBE; --accent-soft:#173547; --line:#2B3852;
+      --card-bg:#141D31; --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 6px 18px rgba(0,0,0,0.35);
+      --status-bad:#E1897C;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#0E1524; --paper-alt:#172137; --ink:#E7ECF7; --ink-soft:#93A2C2;
+    --accent:#5BC6E8; --accent-2:#2E8FBE; --accent-soft:#173547; --line:#2B3852;
+    --card-bg:#141D31; --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 6px 18px rgba(0,0,0,0.35);
+    --status-bad:#E1897C;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Noto Sans KR",sans-serif;
+    -webkit-font-smoothing:antialiased;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+  }
+  .card{
+    width:100%;
+    max-width:400px;
+    background:var(--card-bg);
+    border:1px solid var(--line);
+    border-radius:18px;
+    box-shadow:var(--shadow);
+    padding:40px 32px 34px;
+    text-align:center;
+  }
+  .kicker{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    font-size:12px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:14px;
+  }
+  .kicker .dot{width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,var(--accent-2),var(--accent));flex:none;}
+  h1{
+    font-size:21px;
+    font-weight:900;
+    margin:0 0 8px;
+    letter-spacing:-.01em;
+  }
+  .lede{
+    color:var(--ink-soft);
+    font-size:13.5px;
+    line-height:1.6;
+    margin:0 0 26px;
+  }
+  input{
+    width:100%;
+    padding:14px 16px;
+    border-radius:12px;
+    border:1px solid var(--line);
+    background:var(--paper);
+    color:var(--ink);
+    font-family:inherit;
+    font-size:20px;
+    text-align:center;
+    letter-spacing:0.12em;
+    font-variant-numeric:tabular-nums;
+    outline:none;
+    margin-bottom:8px;
+  }
+  input::placeholder{letter-spacing:normal;font-size:14px;color:var(--ink-soft);}
+  input:focus{border-color:var(--accent);}
+  .err{
+    min-height:18px;
+    font-size:12.5px;
+    color:var(--status-bad);
+    margin-bottom:10px;
+  }
+  button{
+    width:100%;
+    padding:14px 16px;
+    border-radius:12px;
+    border:none;
+    background:linear-gradient(135deg,var(--accent-2),var(--accent));
+    color:#fff;
+    font-family:inherit;
+    font-size:15px;
+    font-weight:700;
+    cursor:pointer;
+    transition:opacity .12s ease;
+  }
+  button:hover{opacity:0.9;}
+  footer{
+    margin-top:28px;
+    font-size:11.5px;
+    color:var(--ink-soft);
+  }
+</style>
+
+<div class="card">
+  <div class="kicker"><span class="dot"></span>TIS 인터내셔널스쿨</div>
+  <h1>소논문 학습 리포트</h1>
+  <p class="lede">안내받은 12자리 코드를 입력하시면<br>해당 학생의 리포트로 이동합니다.</p>
+  <input type="text" id="code" inputmode="numeric" maxlength="12" placeholder="예: 123456789012" autofocus>
+  <div class="err" id="err"></div>
+  <button type="button" onclick="goToReport()">리포트 보기</button>
+  <footer>코드를 잘 모르시면 담당 선생님께 문의해주세요.</footer>
+</div>
+
+<script>
+  var input = document.getElementById('code');
+  input.addEventListener('input', function(){
+    input.value = input.value.replace(/[^0-9]/g, '').slice(0, 12);
+  });
+  input.addEventListener('keydown', function(e){
+    if(e.key === 'Enter') goToReport();
+  });
+  function goToReport(){
+    var val = input.value.trim();
+    var err = document.getElementById('err');
+    if(!/^[0-9]{12}$/.test(val)){
+      err.textContent = '12자리 숫자를 정확히 입력해주세요.';
+      return;
+    }
+    err.textContent = '';
+    window.location.href = val + '.html';
+  }
+</script>

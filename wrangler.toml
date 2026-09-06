@@ -1,0 +1,12 @@
+name = "tis-pta"
+compatibility_date = "2024-09-25"
+main = "src/worker.js"
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+not_found_handling = "404-page"
+
+[[kv_namespaces]]
+binding = "BADGES"
+id = "d483cf1bf48d4ea1bdbaa518f1d53bd6"
