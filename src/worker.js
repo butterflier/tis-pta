@@ -227,7 +227,7 @@ export default {
       return new Response("Method not allowed", { status: 405, headers: CORS_HEADERS });
     }
 
-    if (url.pathname === "/students.html" && request.method === "GET") {
+    if ((url.pathname === "/students.html" || url.pathname === "/students") && request.method === "GET") {
       const html = await renderStudentsPage(env);
       return new Response(html, {
         headers: { "Content-Type": "text/html; charset=UTF-8" },
