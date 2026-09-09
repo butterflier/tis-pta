@@ -482,6 +482,7 @@
         
         
         
+        
         <h1 class="student-name">최재혁</h1>
         </div>
       <div class="student-meta">
@@ -489,6 +490,7 @@
         <span>소논문 지도 수업</span>
       </div>
       <div class="badges-row">
+        
         
         
         
@@ -603,10 +605,11 @@
   if (!row || !dotsWrap) return;
   var months = row.querySelectorAll('.cal-month');
   if (months.length <= 1) return;
+  var lastIdx = months.length - 1;
   months.forEach(function(_, i){
     var b = document.createElement('button');
     b.type = 'button';
-    b.className = 'cal-dot' + (i === 0 ? ' active' : '');
+    b.className = 'cal-dot' + (i === lastIdx ? ' active' : '');
     b.setAttribute('aria-label', (i + 1) + '번째 달');
     b.addEventListener('click', function(){
       row.scrollTo({ left: i * row.clientWidth, behavior: 'smooth' });
@@ -620,6 +623,10 @@
     dots.forEach(function(d, i){ d.classList.toggle('active', i === idx); });
   }
   row.addEventListener('scroll', syncDots, { passive: true });
+  requestAnimationFrame(function(){
+    row.scrollLeft = lastIdx * row.clientWidth;
+    syncDots();
+  });
 })();
 </script>
 
