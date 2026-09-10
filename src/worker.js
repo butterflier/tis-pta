@@ -42,6 +42,9 @@ const BADGE_DESC = {
   nahollojibe: "과제를 쓸쓸하게 집에 홀로 남겨두고 온 친구에게 수여됩니다.",
   hwaksi: "여러가지 경고를 많이 받은 친구에게 수여됩니다.",
   nanguk: "직전 1개월 출석율과 과제 제출율이 모두 60% 미만인 학생에게 부여됩니다.",
+  tatoebi: "예를 들면! 구체적인 예시 없이 주장만 늘어놓은 친구에게 수여됩니다.",
+  tashikani: "확실히! 반대 의견을 인정하는 부분을 빼먹은 친구에게 수여됩니다.",
+  mojaram: "글자수가 모자라 원고지를 다 채우지 못한 친구에게 수여됩니다.",
 };
 
 const GROUPS = [
@@ -59,6 +62,9 @@ const GROUPS = [
     { id: "redvelvet", label: "레드벨벳", small: false, auto: false },
     { id: "nahollojibe", label: "나홀로집에", small: false, auto: false },
     { id: "hwaksi", label: "MR. HWAK", small: false, auto: false },
+    { id: "tatoebi", label: "타토에비", small: false, auto: false },
+    { id: "tashikani", label: "타시카니", small: false, auto: false },
+    { id: "mojaram", label: "모자람", small: false, auto: false },
     { id: "nanguk", label: "상담필요함", small: false, auto: true },
   ]],
 ];
