@@ -45,6 +45,8 @@ const BADGE_DESC = {
   tatoeva: "타토'에'바! 에를 빼먹는 친구에게 수여됩니다.",
   tashikani: "타시'카'니! 카를 빼먹는 친구에게 수여됩니다.",
   mojaram: "글자수가 모자라요! 400자 조차 채우지 못한 친구에게 수여됩니다.",
+  aoao: "히라가나 아, 오를 예쁘게 써내지 못하는 친구들에게 수여됩니다.",
+  jiugekeeper: "잘못 써도 지우지 않은 친구들에게 수여합니다.",
 };
 
 const GROUPS = [
@@ -54,6 +56,8 @@ const GROUPS = [
     { id: "hanamaru", label: "하나마루", small: false, auto: false },
   ]],
   ["지옥계", [
+    { id: "jiugekeeper", label: "지우개수호자", small: false, auto: false },
+    { id: "aoao", label: "아오아오", small: false, auto: false },
     { id: "mojaram", label: "모자람", small: false, auto: false },
     { id: "tashikani", label: "타시'카'니", small: false, auto: false },
     { id: "tatoeva", label: "타토'에'바", small: false, auto: false },
