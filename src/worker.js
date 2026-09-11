@@ -83,7 +83,7 @@ function renderBadge(b, manualByBadge) {
   return `
   <section class="badge-section">
     <div class="badge-head">
-      <img class="${imgClass}" src="/badge-assets/${b.id}.png" alt="${escapeHtml(b.label)}">
+      <img class="${imgClass}" src="/badge-assets/${b.id}.png?v=2" alt="${escapeHtml(b.label)}">
       <div class="badge-headtext">
         <div class="badge-title">${escapeHtml(b.label)} <span class="count">${names.length}명</span></div>
         <div class="badge-desc">${desc}</div>

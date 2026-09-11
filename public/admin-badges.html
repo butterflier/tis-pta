@@ -120,7 +120,7 @@ var saved = {};   // code -> [badgeId,...]  (last known server state)
 var pending = {};  // code -> [badgeId,...]  (working copy being edited)
 var dirty = false;
 
-function badgePath(id){ return '/badge-assets/' + id + '.png'; }
+function badgePath(id){ return '/badge-assets/' + id + '.png?v=2'; }
 
 function renderLegend(){
   var root = document.getElementById('legendGrid');
