@@ -47,6 +47,10 @@ const BADGE_DESC = {
   mojaram: "글자수가 모자라요! 400자 조차 채우지 못한 친구에게 수여됩니다.",
   aoao: "히라가나 아, 오를 예쁘게 써내지 못하는 친구들에게 수여됩니다.",
   jiugekeeper: "잘못 써도 지우지 않은 친구들에게 수여합니다.",
+  re_waojisan: "히라가나 레, 와를 예쁘게 써내지 못하는 친구들에게 수여됩니다.",
+  rental_store: "자꾸 책을 두고와서 빌려가는 친구들에게 수여됩니다.",
+  knit_mothae: "코를 빼먹듯 원고지 빈칸이 있는 친구들에게 수여됩니다.",
+  jkandhyde: "서론과 본론 혹은 결론이 완전히 다른 이중인격 글을 쓴 친구들에게 수여됩니다.",
 };
 
 const GROUPS = [
@@ -56,6 +60,10 @@ const GROUPS = [
     { id: "hanamaru", label: "하나마루", small: false, auto: false },
   ]],
   ["지옥계", [
+    { id: "re_waojisan", label: "레와오지상", small: false, auto: false },
+    { id: "rental_store", label: "도서대여점", small: false, auto: false },
+    { id: "knit_mothae", label: "뜨개질초보", small: false, auto: false },
+    { id: "jkandhyde", label: "지킬앤하이드", small: false, auto: false },
     { id: "jiugekeeper", label: "지우개수호자", small: false, auto: false },
     { id: "aoao", label: "아오아오", small: false, auto: false },
     { id: "mojaram", label: "모자람", small: false, auto: false },
